@@ -54,6 +54,14 @@ typedef struct ASRangeGeometry ASRangeGeometry;
   return self;
 }
 
+- (UICollectionViewLayout *)currentCollectionViewLayout
+{
+  if (_collectionView && [_collectionView collectionViewLayout]) {
+    return [_collectionView collectionViewLayout];
+  }
+  return _collectionViewLayout;
+}
+
 - (NSHashTable<ASCollectionElement *> *)elementsForScrolling:(ASScrollDirection)scrollDirection rangeMode:(ASLayoutRangeMode)rangeMode rangeType:(ASLayoutRangeType)rangeType map:(ASElementMap *)map
 {
   ASRangeTuningParameters tuningParameters = [self tuningParametersForRangeMode:rangeMode rangeType:rangeType];
@@ -73,7 +81,7 @@ typedef struct ASRangeGeometry ASRangeGeometry;
   CGRect preloadBounds = [self rangeBoundsWithScrollDirection:scrollDirection rangeTuningParameters:preloadParams];
   
   CGRect unionBounds = CGRectUnion(displayBounds, preloadBounds);
-  NSArray *layoutAttributes = [_collectionViewLayout layoutAttributesForElementsInRect:unionBounds];
+  NSArray *layoutAttributes = [[self currentCollectionViewLayout] layoutAttributesForElementsInRect:unionBounds];
   NSInteger count = layoutAttributes.count;
 
   __auto_type display = [[NSHashTable<ASCollectionElement *> alloc] initWithOptions:NSHashTableObjectPointerPersonality capacity:count];
@@ -108,7 +116,7 @@ typedef struct ASRangeGeometry ASRangeGeometry;
 
 - (NSHashTable<ASCollectionElement *> *)elementsWithinRangeBounds:(CGRect)rangeBounds map:(ASElementMap *)map
 {
-  NSArray *layoutAttributes = [_collectionViewLayout layoutAttributesForElementsInRect:rangeBounds];
+  NSArray *layoutAttributes = [[self currentCollectionViewLayout] layoutAttributesForElementsInRect:rangeBounds];
   NSHashTable<ASCollectionElement *> *elementSet = [[NSHashTable alloc] initWithOptions:NSHashTableObjectPointerPersonality capacity:layoutAttributes.count];
   
   for (UICollectionViewLayoutAttributes *la in layoutAttributes) {
