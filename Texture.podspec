@@ -8,6 +8,7 @@ Pod::Spec.new do |spec|
   spec.source       = { :git => 'https://github.com/TextureGroup/Texture.git', :tag => spec.version.to_s }
   spec.module_name  = 'AsyncDisplayKit'
   spec.header_dir   = 'AsyncDisplayKit'
+  spec.static_framework = true
 
   spec.documentation_url = 'http://texturegroup.org/appledoc/'
 
